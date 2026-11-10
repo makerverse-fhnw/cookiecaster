@@ -1,0 +1,62 @@
+name: Automatic Release
+
+# Creates a patch release when main has commits since the latest tag.
+#
+# DISABLED: releases are controlled through release_manual.yml. To enable the
+# daily automatic release, uncomment the schedule trigger below.
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "0 19 * * *" # daily at 19:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Check for new commits
+    runs-on: ubuntu-latest
+    outputs:
+      release: ${{ steps.next.outputs.release }}
+      version: ${{ steps.next.outputs.version }}
+    steps:
+      - name: Check out main with full history
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Determine next version
+        id: next
+        run: |
+          base=$(git tag --list | sed 's/^v//' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 || true)
+
+          if [ -n "$base" ]; then
+            tag="v$base"
+            git rev-parse -q --verify "refs/tags/$tag" >/dev/null || tag="$base"
+            if [ "$(git rev-list --count "$tag..HEAD")" -eq 0 ]; then
+              echo "No commits since $tag, nothing to release."
+              echo "release=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          else
+            base=$(tr -d '[:space:]' < VERSION.md)
+          fi
+
+          IFS=. read -r major minor patch <<< "$base"
+          version="$major.$minor.$((patch + 1))"
+
+          echo "Releasing $version (previous: $base)."
+          echo "release=true" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  release:
+    name: Release
+    needs: prepare
+    if: needs.prepare.outputs.release == 'true'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release_manual.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}

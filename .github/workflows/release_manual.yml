@@ -1,0 +1,124 @@
+name: Manual Release
+
+# Creates a release for an explicit version number: validates the version,
+# updates VERSION.md / package.json / CHANGELOG.md, tags, creates the GitHub
+# Release and deploys the build to GitHub Pages (gh-pages branch).
+#
+# Also callable from other workflows (see release_auto.yml).
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, e.g. 3.3.0 (must be greater than the latest tag)"
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        description: "Version to release, e.g. 3.3.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release and deploy
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: Check out main with full history
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Validate version
+        run: |
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version '$VERSION' is not of the form MAJOR.MINOR.PATCH."
+            exit 1
+          fi
+
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null \
+            || git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null; then
+            echo "::error::Version $VERSION has already been released."
+            exit 1
+          fi
+
+          latest=$(git tag --list | sed 's/^v//' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 || true)
+          if [ -n "$latest" ]; then
+            highest=$(printf '%s\n%s\n' "$latest" "$VERSION" | sort -V | tail -n 1)
+            if [ "$highest" != "$VERSION" ]; then
+              echo "::error::Version $VERSION is not greater than the latest release $latest."
+              exit 1
+            fi
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Update VERSION.md and package.json
+        run: |
+          printf '%s\n' "$VERSION" > VERSION.md
+          npm pkg set version="$VERSION"
+
+      - name: Update changelog
+        run: |
+          previous=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          if [ -n "$previous" ]; then range="$previous..HEAD"; else range="HEAD"; fi
+
+          {
+            echo "# Changelog"
+            echo
+            echo "## v$VERSION - $(date -u +%F)"
+            echo
+            git log --no-merges --pretty='- %s (%h)' "$range"
+            echo
+            if [ -f CHANGELOG.md ]; then tail -n +3 CHANGELOG.md; fi
+          } > CHANGELOG.tmp
+          mv CHANGELOG.tmp CHANGELOG.md
+
+      - name: Lint, test and build
+        run: |
+          yarn lint
+          yarn test --coverageThreshold='{"global":{"lines":80}}'
+          yarn build
+
+      - name: Commit, tag and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERSION.md package.json CHANGELOG.md
+          git commit -m "Release v$VERSION"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push --atomic origin HEAD:main "v$VERSION"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "v$VERSION" --title "v$VERSION" --generate-notes
+
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          yarn gh-pages -d dist \
+            -m "Deploy v$VERSION" \
+            -u "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
+            -r "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"

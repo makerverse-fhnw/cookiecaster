@@ -1,0 +1,64 @@
+name: Coverage
+
+# Runs on every push to main: generates the coverage report and updates the
+# coverage badge in README.md.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: coverage
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    name: Coverage report and badge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Run tests with coverage
+        run: yarn test
+
+      - name: Add coverage summary to the run
+        run: |
+          node -e '
+            const t = require("./coverage/coverage-summary.json").total;
+            console.log("## Coverage\n");
+            console.log("| Metric | Covered |");
+            console.log("|---|---|");
+            for (const k of ["lines", "statements", "functions", "branches"]) {
+              console.log(`| ${k} | ${t[k].pct}% |`);
+            }
+          ' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Update coverage badge in README
+        run: yarn coverage:badge
+
+      - name: Commit updated badge
+        run: |
+          if git diff --quiet -- README.md; then
+            echo "Coverage badge unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update coverage badge [skip ci]"
+          git push origin HEAD:main
