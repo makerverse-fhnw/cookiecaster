@@ -38,33 +38,6 @@ All diagrams are drawn with [draw.io](https://draw.io). You can find the diagram
 
 - Runs entirely client-side (no backend required)
 
-## Differences Compared to CookieCaster 2.0
-
-CookieCaster 3.0 is the successor to [CookieCaster 2.0](https://www.cs.technik.fhnw.ch/cookiecaster/)
-
-Key improvements include:
-- Migration to React ≥ 19.2.x
-
-- Fully function-based components (no class components)
-
-- Improved and cleaner project structure
-
-- Increased usage of Bootstrap for layout and responsiveness
-
-- Overall responsive design improvements
-
-- CI/CD automation (checks, tests, releases, deployment)
-
-- Simplified and redesigned draw page
-
-- Introduction of the .cc3 file format
-
-- Import/export support for .cc3 files
-
-- No server backend required
-
-- Hosted on GitHub Pages instead of a local server
-
 ## Getting started (Local Development)
 
 These steps describe the simplest way to run CookieCaster 3.0 locally for development and contributions.
