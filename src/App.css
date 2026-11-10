@@ -1,0 +1,51 @@
+/* ============================================================
+   CookieCaster 3.0 – App.css (Bootstrap 5 compatible)
+   Same appearance, updated conventions
+   ============================================================ */
+
+.App {
+    text-align: center;
+}
+
+/* Optional: keep smooth infinite rotation for any logo image */
+.App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
+    width: auto;
+    display: inline-block;
+}
+
+/* Header styling – now flexbox-centered for modern layout */
+.App-header {
+    background-color: #222;
+    height: 150px;
+    padding: 20px;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Title & Intro text – unchanged appearance */
+.App-title {
+    font-size: 1.5em;
+    font-family: var(--hausschrift, "Indie Flower", cursive);
+    margin: 0;
+}
+
+.App-intro {
+    font-size: 1.125rem;
+}
+
+/* Simple keyframes retained */
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

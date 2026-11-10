@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: business-logic/handlers/Intersections.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: business-logic/handlers/Intersections.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const eta = 1e-9; // precision
+
+/**
+ *
+ * @param {number[][][]} segments
+ * @returns {number[] | undefined} - intersection point
+ */
+export default function intersections(segments) {
+    //init event queue
+    const queue = [];
+    let id = 0;
+    segments.forEach(seg => {
+        const p1x = seg[0][0];
+        const p1y = seg[0][1];
+        const p2x = seg[1][0];
+        const p2y = seg[1][1];
+        if (p1x &lt; p2x) {
+            queue.push({segId: id, pos: {x: p1x, y: p1y}, type: 'start', vec: {x: p2x - p1x, y: p2y - p1y}});
+            queue.push({segId: id, pos: {x: p2x, y: p2y}, type: 'end'});
+        } else {
+            queue.push({segId: id, pos: {x: p2x, y: p2y}, type: 'start', vec: {x: p1x - p2x, y: p1y - p2y}});
+            queue.push({segId: id, pos: {x: p1x, y: p1y}, type: 'end'});
+        }
+        id++;
+    });
+    queue.sort((a, b) => {
+        const d = b.pos.x - a.pos.x;
+        if (d > eta) return 1;
+        else if (d &lt; -eta) return -1;
+        else return b.type &lt; a.type ? 1 : -1;
+    });
+
+    //sweep
+    const intersections = [];
+    const map = new Map();
+    let event= queue.pop();
+    while (event !== undefined) {
+        // console.log(`segment: ${event.segId}, type: ${event.type}`);
+        if (event.type === 'start') {
+            // console.log(`pos: (${event.pos.x}, ${event.pos.y}), vec: (${event.vec.x}, ${event.vec.y})`);
+            map.forEach((value) => {
+                const i = intersect(value.pos, value.vec, event.pos, event.vec);
+                if (i !== undefined) intersections.push(i);
+            });
+            map.set(event.segId, {pos: event.pos, vec: event.vec});
+        } else {
+            map.delete(event.segId);
+        }
+        event= queue.pop();
+    }
+    return intersections;
+}
+
+/**
+ * Calculates the intersection between 2 line segments
+ *
+ * @param {{x: number, y: number}} r1 - origin segment 1
+ * @param {{x: number, y: number}} a1 - vector segment 1
+ * @param {{x: number, y: number}} r2 - origin segment 2
+ * @param {{x: number, y: number}} a2 - vector segment 2
+ * @returns {number[] | undefined} - intersection point
+ */
+function intersect(r1, a1, r2, a2) {
+    if (Math.abs(a1.x * a2.y - a1.y * a2.x) &lt; eta) {
+        //parallelism
+        //may handled otherwise if needed
+        return undefined;
+    } else {
+        let lambda1, lambda2;
+        if (Math.abs(a1.x) &lt; eta) {
+            lambda2 = (r1.x - r2.x) / a2.x;
+            lambda1 = (r2.y - r1.y + lambda2 * a2.y) / a1.y;
+        } else if (Math.abs(a1.y) &lt; eta) {
+            lambda2 = (r1.y - r2.y) / a2.y;
+            lambda1 = (r2.x - r1.x + lambda2 * a2.x) / a1.x;
+        } else if (Math.abs(a2.x) &lt; eta) {
+            lambda1 = (r2.x - r1.x) / a1.x;
+            lambda2 = (r1.y - r2.y + lambda1 * a1.y) / a2.y;
+        } else if (Math.abs(a2.y) &lt; eta) {
+            lambda1 = (r2.y - r1.y) / a1.y;
+            lambda2 = (r1.x - r2.x + lambda1 * a1.x) / a2.x;
+        } else {
+            lambda1 = (r2.x - r1.x + a2.x * (r1.y - r2.y) / a2.y) / (a1.x - a1.y * a2.x / a2.y);
+            lambda2 = (r1.y - r2.y + lambda1 * a1.y) / a2.y
+        }
+
+        if (lambda1 > eta &amp;&amp; lambda1 &lt; 1 - eta &amp;&amp; lambda2 > eta &amp;&amp; lambda2 &lt; 1 - eta) {
+            //vertices doesn't intersect
+            return [r1.x + lambda1 * a1.x, r1.y + lambda1 * a1.y]
+        }
+        return undefined;
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AbstractMode">AbstractMode</a></li><li><a href="global.html#DRAWING_AREA_GRID_RASTER_SPACE">DRAWING_AREA_GRID_RASTER_SPACE</a></li><li><a href="global.html#SelectionHandler">SelectionHandler</a></li><li><a href="global.html#_mesh">_mesh</a></li><li><a href="global.html#calcPathMeta">calcPathMeta</a></li><li><a href="global.html#calcQ">calcQ</a></li><li><a href="global.html#createFace">createFace</a></li><li><a href="global.html#createFacet">createFacet</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createMeshSingleForm">createMeshSingleForm</a></li><li><a href="global.html#exportCC3File">exportCC3File</a></li><li><a href="global.html#importCC3File">importCC3File</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#intersections">intersections</a></li><li><a href="global.html#pathToPoints">pathToPoints</a></li><li><a href="global.html#sanitizeFileName">sanitizeFileName</a></li><li><a href="global.html#trace">trace</a></li><li><a href="global.html#traceEdge">traceEdge</a></li><li><a href="global.html#traceForm">traceForm</a></li><li><a href="global.html#validateGraph">validateGraph</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Nov 10 2026 15:02:12 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+/* ============================================================
+   CookieCaster 3.0 – CustomNavbar (Bootstrap 5 compatible)
+   Preserves original colors and font from CookieCaster 2.0
+   ============================================================ */
+
+.custom-navbar {
+    background-color: var(--akzentfarbe1) !important;
+    font-family: var(--hausschrift);
+    font-size: 20px;
+    width: 100%;
+    z-index: 2;
+    position: sticky;
+    top: 0;
+    border: none;
+    border-radius: 0;
+}
+
+/* FHNW Logo Schutzzone */
+/* Setze hier die gewünschte Logo-Höhe */
+.fhnw-logo-safezone {
+  --logo-h: 28px;
+  --x: var(--logo-h);
+
+  padding:
+    calc(var(--x) * 0.5)
+    var(--x);
+
+  display: inline-flex;
+  align-items: center;
+}
+
+.fhnw-logo {
+  height: var(--logo-h);
+  width: auto;
+  display: block;
+}
+
+/* Brand text */
+/* Base + visited */
+.custom-navbar .navbar-brand,
+.custom-navbar .navbar-brand:visited {
+    color: white;
+    font-size: 30pt;
+    font-family: var(--hausschrift);
+    transition: color 0.2s ease;
+}
+
+.custom-navbar .navbar-brand:hover,
+.custom-navbar .navbar-brand:focus-visible {
+    color: var(--akzentfarbe2);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+/* Navbar links */
+.custom-navbar .navbar-nav .nav-link
+{
+    color: white;
+    text-shadow: none;
+    transition: color 0.2s ease;
+}
+
+.custom-navbar .navbar-nav .nav-link:hover,
+.custom-navbar .navbar-nav .nav-link:focus-visible {
+    color: var(--akzentfarbe2);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+/* Dropdown styling */
+.navbar-nav .dropdown-menu {
+    background-color: var(--akzentfarbe1);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.navbar-nav .dropdown-item {
+    color: white;
+    font-size: 20px;
+    font-family: var(--hausschrift);
+    transition: color 0.2s ease;
+}
+
+.navbar-nav .dropdown-item:hover,
+.navbar-nav .dropdown-item:focus {
+    color: var(--akzentfarbe2);
+    background-color: transparent;
+}
+
+/* Language dropdown toggle icon */
+#basic-nav-dropdown {
+    color: white;
+}
+
+#basic-nav-dropdown:hover,
+#basic-nav-dropdown:focus {
+    color: var(--akzentfarbe2);
+    text-decoration: none;
+    background-color: transparent;
+}
+
+/* Mobile toggle button */
+.navbar-toggler {
+    border-color: white;
+}
+
+.navbar-toggler-icon {
+    filter: invert(100%);
+}
+
+/* Utility */
+a:focus {
+    outline: none;
+}
