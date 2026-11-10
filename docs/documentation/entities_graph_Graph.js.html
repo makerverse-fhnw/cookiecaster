@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: entities/graph/Graph.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: entities/graph/Graph.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Node from './Node.js'
+import Edge from './Edge.js'
+import validateGraph from '../../business-logic/graph-operations/Validation.js'
+import analyzeGraph from '../../business-logic/graph-operations/Analysis.js'
+import SvgHandler from '../../business-logic/handlers/SvgHandler.js'
+
+let _singleton = Symbol();
+
+export default class Graph {
+    constructor(singletonToken) {
+        if (_singleton !== singletonToken)
+            throw new Error('Cannot instantiate directly.');
+
+        this._nodes = new Map();
+        this._edges = new Map();
+    }
+
+    /**
+     * Static accessor
+     *
+     * @returns {Graph}
+     */
+    static get instance() {
+        if (!this[_singleton])
+            this[_singleton] = new Graph(_singleton);
+
+        return this[_singleton]
+    }
+
+    backup() {
+        this._backup = this.toJSON();
+    }
+
+    restore() {
+        this.fromJSON(this._backup);
+    }
+
+    // ============ Nodes ============
+    /**
+     * Returns size of _nodes
+     * @returns {number}
+     */
+    get nodeSize() {
+        return this._nodes.size;
+    }
+
+    /**
+     * Checks if the specified node id exists
+     * @param {*} id - node id
+     * @returns {boolean}
+     */
+    hasNode(id) {
+        return this._nodes.has(id);
+    }
+
+    /**
+     * Adds
+     * @param {Node} node - node id
+     */
+    addNode(node) {
+        SvgHandler.instance.addNode(node);
+        this._nodes.set(node.id, node);
+    };
+
+    /**
+     * Gets the defined node
+     * @param {*} id - node id
+     * @returns {Node}
+     */
+    getNode(id) {
+        return this._nodes.get(id);
+    }
+
+    /**
+     * Removes the specified node
+     * Removes adjacent _edges
+     * @param {Node} node
+     */
+    removeNode(node) {
+        const adja = node.adjacent.slice(0);  //clone adjacent _edges
+        adja.forEach(edge => {
+            this.removeEdge(edge);
+        });
+        SvgHandler.instance.removeNode(node);
+        this._nodes.delete(node.id);
+    };
+
+    /**
+     * Iterates over each node
+     * @param {function} callback - callback function
+     */
+    forEachNode(callback) {
+        Array.from(this._nodes.values()).forEach(callback);
+    }
+
+    // ============ Edges ============
+    /**
+     * Returns size of _edges
+     * @returns {number}
+     */
+    get edgeSize() {
+        return this._edges.size;
+    }
+
+    /**
+     * Checks if the specified edge id exists
+     * @param {*} id - edge id
+     * @returns {boolean}
+     */
+    hasEdge(id) {
+        return this._edges.has(id);
+    }
+
+    /**
+     * Creates and adds an edge
+     * Registers edge to adjacent _nodes
+     * @param {Edge} edge - edge
+     */
+    addEdge(edge) {
+        SvgHandler.instance.addEdge(edge);
+        this._edges.set(edge.id, edge);
+    };
+
+    /**
+     * Gets the defined edge
+     * @param {*} id - edge id
+     * @returns {Edge}
+     */
+    getEdge(id) {
+        return this._edges.get(id);
+    }
+
+    /**
+     * Removes the specified edge
+     * Unregister from adjacent _nodes
+     * @param {Edge} edge - edge
+     */
+    removeEdge(edge) {
+        SvgHandler.instance.removeEdge(edge);
+        edge.removeFromAdjacentNode();
+        this._edges.delete(edge.id);
+    };
+
+    /**
+     * Iterates over each edge
+     * @param {function} callback - callback function
+     */
+    forEachEdge(callback) {
+        Array.from(this._edges.values()).forEach(callback);
+    }
+
+    /**
+     * Clears the complete graph
+     */
+    clear() {
+        SvgHandler.instance.clear();
+        this._nodes.clear();
+        this._edges.clear();
+    };
+
+    // ============ Graph functions ============
+    validate() {
+        return validateGraph(this);
+    }
+    analyze(data, crit){
+        return analyzeGraph(this, data, crit);
+    }
+
+    /**
+     * Converts the graph into a non-cyclic object
+     *
+     * @returns {string}
+     */
+    toJSON() {
+        const graph = {nodes: [], edges: []};
+        this.forEachNode(node => {
+            graph.nodes.push({id: node.id, pos: node.pos});
+        });
+        this.forEachEdge(edge => {
+            graph.edges.push({id: edge.id, from: edge.from.id, to: edge.to.id, q: edge.q});
+        });
+        return JSON.stringify(graph);
+    }
+
+    /**
+     * Loads the graph from an non-cyclic json object
+     *
+     * @param {string} json - graph
+     */
+    fromJSON(json) {
+        this.clear();
+        const obj = JSON.parse(json);
+        let nid = 0;
+        let eid = 0;
+        obj.nodes.forEach(node => {
+            const n = new Node(node.id, node.pos);
+            this.addNode(n);
+            if (node.id > nid) {
+                nid = node.id;
+            }
+        });
+        obj.edges.forEach(edge => {
+            const from = this.getNode(edge.from);
+            const to = this.getNode(edge.to);
+            const e = new Edge(edge.id, from, to, edge.q);
+            this.addEdge(e);
+            if (edge.id > 0) {
+                eid = edge.id;
+            }
+        });
+        const svgh = SvgHandler.instance;
+        svgh.nodeID = nid + 1;
+        svgh.edgeID = eid + 1;
+    }
+
+    fromSvg(forms) {
+        this.clear();
+        const svgh = SvgHandler.instance;
+        for (let j = 0; j &lt; forms.length; j++) {
+            const segments = forms[j].split(' Q ');
+            const n = segments.length - 1;
+            let segment = segments[0];
+            let valStr = segment.split(' ');
+            let pos = {x: Number.parseFloat(valStr[0]), y: Number.parseFloat(valStr[1])};
+            const origin = new Node(svgh.nodeID++, pos);
+            let from = origin;
+            let q = undefined;
+            let to = undefined;
+            let edge = undefined;
+            this.addNode(from);
+
+            for (let i = 1; i &lt; n; i++) {
+                segment = segments[i];
+                valStr = segment.split(' ');
+                pos = {x: Number.parseFloat(valStr[2]), y: Number.parseFloat(valStr[3])};
+                q = {x: Number.parseFloat(valStr[0]), y: Number.parseFloat(valStr[1])};
+                to = new Node(svgh.nodeID++, pos);
+                this.addNode(to);
+                edge = new Edge(svgh.edgeID++, from, to, q);
+                this.addEdge(edge);
+                from = to;
+            }
+
+            segment = segments[n];
+            valStr = segment.split(' ');
+            q = {x: Number.parseFloat(valStr[0]), y: Number.parseFloat(valStr[1])};
+            const ex = Number.parseFloat(valStr[2]);
+            const ey = Number.parseFloat(valStr[3]);
+            if (origin.pos.x === ex &amp;&amp; origin.pos.y === ey) {
+                //closed path
+                edge = new Edge(svgh.edgeID++, from, origin, q);
+            } else {
+                //not closed path
+                to = new Node(svgh.nodeID++, {x: ex, y: ey});
+                this.addNode(to);
+                edge = new Edge(svgh.edgeID++, from, to, q);
+            }
+            this.addEdge(edge);
+        }
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.html#.exports">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#DRAWING_AREA_GRID_RASTER_SPACE">DRAWING_AREA_GRID_RASTER_SPACE</a></li><li><a href="global.html#_transition">_transition</a></li><li><a href="global.html#addEdge">addEdge</a></li><li><a href="global.html#addNode">addNode</a></li><li><a href="global.html#calcPathMeta">calcPathMeta</a></li><li><a href="global.html#calcQ">calcQ</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#createFace">createFace</a></li><li><a href="global.html#createFacet">createFacet</a></li><li><a href="global.html#createMeshSingleForm">createMeshSingleForm</a></li><li><a href="global.html#edgeSize">edgeSize</a></li><li><a href="global.html#erase">erase</a></li><li><a href="global.html#escape">escape</a></li><li><a href="global.html#exportCC3File">exportCC3File</a></li><li><a href="global.html#fixAndSnapPoint">fixAndSnapPoint</a></li><li><a href="global.html#forEachEdge">forEachEdge</a></li><li><a href="global.html#forEachNode">forEachNode</a></li><li><a href="global.html#fromJSON">fromJSON</a></li><li><a href="global.html#getAdjacentNodes">getAdjacentNodes</a></li><li><a href="global.html#getEdge">getEdge</a></li><li><a href="global.html#getNode">getNode</a></li><li><a href="global.html#hasEdge">hasEdge</a></li><li><a href="global.html#hasNode">hasNode</a></li><li><a href="global.html#importCC3File">importCC3File</a></li><li><a href="global.html#instance">instance</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mirror">mirror</a></li><li><a href="global.html#nodeSize">nodeSize</a></li><li><a href="global.html#pathToPoints">pathToPoints</a></li><li><a href="global.html#registerAdjacentEdge">registerAdjacentEdge</a></li><li><a href="global.html#removeEdge">removeEdge</a></li><li><a href="global.html#removeNode">removeNode</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#sanitizeFileName">sanitizeFileName</a></li><li><a href="global.html#selectEdge">selectEdge</a></li><li><a href="global.html#selectNode">selectNode</a></li><li><a href="global.html#setQEdge">setQEdge</a></li><li><a href="global.html#toJSON">toJSON</a></li><li><a href="global.html#trace">trace</a></li><li><a href="global.html#traceEdge">traceEdge</a></li><li><a href="global.html#traceForm">traceForm</a></li><li><a href="global.html#unregisterAdjacentEdge">unregisterAdjacentEdge</a></li><li><a href="global.html#updateEdge">updateEdge</a></li><li><a href="global.html#updateNode">updateNode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Nov 24 2025 09:42:28 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+.sidebar-section img {
+    width: 100%;
+    margin-bottom: 2em;
+}
+
+#hoeheWaehlen, #wandstaerkeWaehlen, #dateiName {
+    background-color: transparent;
+    color: var(--akzentfarbe2);
+}
+
+#createMesh {
+    float:right;
+}
+
+#zurückButton {
+    float: left;
+}
+
+#createMesh.btn-primary:disabled {
+    background-color: var(--akzentfarbe3);
+}
+
+#exportTooltip.tooltip {
+    float: right;
+}
+
+#exportTooltip.tooltip .tooltiptext {
+    right: 100%;
+}

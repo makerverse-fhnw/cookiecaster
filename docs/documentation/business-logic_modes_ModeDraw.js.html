@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: business-logic/modes/ModeDraw.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: business-logic/modes/ModeDraw.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author Claudio
+ * @date 29.04.2018
+ * @version 1.0
+ */
+
+import * as d3 from "d3";
+import AbstractMode from "./AbstractMode.js";
+import Node from '../../entities/graph/Node.js'
+import Edge from '../../entities/graph/Edge.js'
+import SvgHandler from '../handlers/SvgHandler.js'
+import Graph from "../../entities/graph/Graph.js";
+import Controller from "../handlers/Controller.js";
+import SelectionHandler from "../handlers/SelectionHandler.js";
+
+export default class ModeDraw extends AbstractMode {
+    constructor() {
+        super();
+        this._prev = undefined;
+    }
+
+    get prev() {
+        return this._prev
+    }
+
+    set prev(value) {
+        this._prev = value;
+        if (value !== undefined) {
+            SvgHandler.instance.resetMoveEdge(value.pos);
+        }
+    }
+
+    enable() {
+        d3.select("#draw").classed("activeMode", true);
+        this.enableButtons({move: false, rotate: false, copy: false, mirror: false, erase: false});
+        SelectionHandler.instance.clear();
+    }
+
+    onMouseDown(point) {
+        const svgh = SvgHandler.instance;
+        const focus = svgh.focus;
+        const graph = Graph.instance;
+        if (this.prev !== undefined) {
+            if (focus.obj !== undefined &amp;&amp; focus.type === "node") {
+                if (focus.obj !== this.prev) {
+                    const an = focus.obj.adjacent.length;
+                    if (an &lt; 2) {
+                        const eid = svgh.edgeID++;
+                        const edge = new Edge(eid, this.prev, focus.obj);
+                        graph.addEdge(edge);
+                        this.prev = focus.obj;
+                        if (focus.obj.adjacent.length === 2) {
+                            return Controller.instance.modi.MODE_SELECT;
+                        }
+                        this.prev = focus.obj;
+                    } else if (an === 2) {
+                        return Controller.instance.modi.MODE_SELECT;
+                    }
+                } else {
+                    return Controller.instance.modi.MODE_SELECT;
+                }
+            } else if (focus.obj === undefined) {
+                const eid = svgh.edgeID++;
+                const nid = svgh.nodeID++;
+                const node = new Node(nid, point);
+                graph.addNode(node);
+                const edge = new Edge(eid, this.prev, node);
+                graph.addEdge(edge);
+                this.prev = node;
+            }
+        } else {
+            if (focus.obj !== undefined &amp;&amp; focus.type === "node" &amp;&amp; focus.obj.adjacent.length &lt; 2) {
+                this.prev = focus.obj;
+                SvgHandler.instance.setMoveEdgeVisible(true);
+            } else if (focus.obj === undefined) {
+                const nid = svgh.nodeID++;
+                const node = new Node(nid, point);
+                graph.addNode(node);
+                this.prev = node;
+                SvgHandler.instance.setMoveEdgeVisible(true);
+            }
+        }
+        svgh.updateMessage();
+    }
+
+    onMouseMove(point) {
+        const svgh = SvgHandler.instance;
+        const focus = svgh.focus;
+        if (this.prev !== undefined)
+            svgh.setMoveEdgeTo(focus.obj !== undefined &amp;&amp; focus.type === "node" ? focus.obj.pos : point);
+    }
+
+    onEscape() {
+        return Controller.instance.modi.MODE_SELECT;
+    }
+
+    disable() {
+        d3.select("#draw").classed("activeMode", false);
+        this.prev = undefined;
+        SvgHandler.instance.setMoveEdgeVisible(false);
+    }
+
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AbstractMode">AbstractMode</a></li><li><a href="global.html#DRAWING_AREA_GRID_RASTER_SPACE">DRAWING_AREA_GRID_RASTER_SPACE</a></li><li><a href="global.html#ModeDraw">ModeDraw</a></li><li><a href="global.html#ModeMove">ModeMove</a></li><li><a href="global.html#ModeSelect">ModeSelect</a></li><li><a href="global.html#SelectionHandler">SelectionHandler</a></li><li><a href="global.html#_mesh">_mesh</a></li><li><a href="global.html#calcPathMeta">calcPathMeta</a></li><li><a href="global.html#calcQ">calcQ</a></li><li><a href="global.html#createFace">createFace</a></li><li><a href="global.html#createFacet">createFacet</a></li><li><a href="global.html#createMesh">createMesh</a></li><li><a href="global.html#createMeshSingleForm">createMeshSingleForm</a></li><li><a href="global.html#exportCC3File">exportCC3File</a></li><li><a href="global.html#importCC3File">importCC3File</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#intersections">intersections</a></li><li><a href="global.html#pathToPoints">pathToPoints</a></li><li><a href="global.html#round5">round5</a></li><li><a href="global.html#sanitizeFileName">sanitizeFileName</a></li><li><a href="global.html#trace">trace</a></li><li><a href="global.html#traceEdge">traceEdge</a></li><li><a href="global.html#traceForm">traceForm</a></li><li><a href="global.html#validateGraph">validateGraph</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Nov 24 2025 20:43:39 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

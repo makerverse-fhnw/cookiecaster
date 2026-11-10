@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "default": {
+      "angle": 30,
+      "dist": 10
+    }
+  }
+}

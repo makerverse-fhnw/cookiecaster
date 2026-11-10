@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: exports</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: exports</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>exports<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+
+    
+    <h4 class="name" id=".exports"><span class="type-signature"></span>new exports<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-version">Version:</dt>
+    <dd class="tag-version"><ul class="dummy"><li>1.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Claudio</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="business-logic_modes_AbstractMode.js.html">business-logic/modes/AbstractMode.js</a>, <a href="business-logic_modes_AbstractMode.js.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="adjacent"><span class="type-signature"></span>adjacent<span class="type-signature"> :Array.&lt;Edge></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array.&lt;Edge></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_graph_Node.js.html">entities/graph/Node.js</a>, <a href="entities_graph_Node.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="q"><span class="type-signature"></span>q<span class="type-signature"> :Object</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_graph_Edge.js.html">entities/graph/Edge.js</a>, <a href="entities_graph_Edge.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>exports<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>Handles selection state for nodes and edges.
+Manages single and rectangle selections and keeps SVG UI in sync.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id=".exports"><span class="type-signature"></span>new exports<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="business-logic_handlers_SelectionHandler.js.html">business-logic/handlers/SelectionHandler.js</a>, <a href="business-logic_handlers_SelectionHandler.js.html#line6">line 6</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="adjacent"><span class="type-signature"></span>adjacent<span class="type-signature"> :Array.&lt;Edge></span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array.&lt;Edge></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_graph_Node.js.html">entities/graph/Node.js</a>, <a href="entities_graph_Node.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="q"><span class="type-signature"></span>q<span class="type-signature"> :Object</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="entities_graph_Edge.js.html">entities/graph/Edge.js</a>, <a href="entities_graph_Edge.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.html#.exports">exports</a></li><li><a href="module.exports_module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#DRAWING_AREA_GRID_RASTER_SPACE">DRAWING_AREA_GRID_RASTER_SPACE</a></li><li><a href="global.html#_transition">_transition</a></li><li><a href="global.html#addEdge">addEdge</a></li><li><a href="global.html#addNode">addNode</a></li><li><a href="global.html#calcPathMeta">calcPathMeta</a></li><li><a href="global.html#calcQ">calcQ</a></li><li><a href="global.html#clear">clear</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#createFace">createFace</a></li><li><a href="global.html#createFacet">createFacet</a></li><li><a href="global.html#createMeshSingleForm">createMeshSingleForm</a></li><li><a href="global.html#edgeSize">edgeSize</a></li><li><a href="global.html#erase">erase</a></li><li><a href="global.html#escape">escape</a></li><li><a href="global.html#exportCC3File">exportCC3File</a></li><li><a href="global.html#fixAndSnapPoint">fixAndSnapPoint</a></li><li><a href="global.html#forEachEdge">forEachEdge</a></li><li><a href="global.html#forEachNode">forEachNode</a></li><li><a href="global.html#fromJSON">fromJSON</a></li><li><a href="global.html#getAdjacentNodes">getAdjacentNodes</a></li><li><a href="global.html#getEdge">getEdge</a></li><li><a href="global.html#getNode">getNode</a></li><li><a href="global.html#hasEdge">hasEdge</a></li><li><a href="global.html#hasNode">hasNode</a></li><li><a href="global.html#importCC3File">importCC3File</a></li><li><a href="global.html#instance">instance</a></li><li><a href="global.html#intersect">intersect</a></li><li><a href="global.html#mirror">mirror</a></li><li><a href="global.html#nodeSize">nodeSize</a></li><li><a href="global.html#pathToPoints">pathToPoints</a></li><li><a href="global.html#registerAdjacentEdge">registerAdjacentEdge</a></li><li><a href="global.html#removeEdge">removeEdge</a></li><li><a href="global.html#removeNode">removeNode</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#sanitizeFileName">sanitizeFileName</a></li><li><a href="global.html#selectEdge">selectEdge</a></li><li><a href="global.html#selectNode">selectNode</a></li><li><a href="global.html#setQEdge">setQEdge</a></li><li><a href="global.html#toJSON">toJSON</a></li><li><a href="global.html#trace">trace</a></li><li><a href="global.html#traceEdge">traceEdge</a></li><li><a href="global.html#traceForm">traceForm</a></li><li><a href="global.html#unregisterAdjacentEdge">unregisterAdjacentEdge</a></li><li><a href="global.html#updateEdge">updateEdge</a></li><li><a href="global.html#updateNode">updateNode</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Nov 24 2025 09:42:28 GMT+0100 (Mitteleuropäische Normalzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

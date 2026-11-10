@@ -1,0 +1,24 @@
+{
+  "plugins": [
+    "plugins/markdown",
+    "jsdoc-babel"
+  ],
+  "babel": {
+    "presets": [
+      "@babel/preset-react",
+      "@babel/preset-env"
+    ]
+  },
+  "source": {
+    "include": [
+      "src"
+    ],
+    "includePattern": ".+\\.(js|jsx)$",
+    "excludePattern": "(node_modules|dist)"
+  },
+  "opts": {
+    "destination": "docs/documentation",
+    "recurse": true,
+    "encoding": "utf8"
+  }
+}

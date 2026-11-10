@@ -1,0 +1,500 @@
+/* ============================================================
+   CookieCaster 3.0 – start.css (modernized, Bootstrap 5 ready)
+   ============================================================ */
+
+/* === Layout alignment fix === */
+.start-root {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--hintergrundfarbe);
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+}
+
+/* Flex container for drawing + sidenav */
+.start-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* top alignment */
+    gap: 3rem;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    position: sticky;
+    top: 100px
+}
+
+/* Center canvas block */
+.canvas-wrap {
+    display: flex;
+    justify-content: flex-end; /* pushes canvas toward sidenav */
+    align-items: flex-start;
+}
+
+/* Drawing area styling */
+#drawingarea {
+    position: relative;
+    background: var(--akzentfarbe3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    width: clamp(250px, 55vw, 18cm);
+    height: clamp(250px, 55vw, 18cm);
+    flex-shrink: 0;   
+}
+
+#drawingarea::before {
+    display: none;
+}
+
+
+
+
+/* === SIDENAV === */
+.sidenav {
+    width: 350px;
+    min-width: 350px;
+    background-color: var(--akzentfarbe1);
+    color: white;
+    padding: 1.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    height: fit-content;
+    font-family: var(--hausschrift);
+    overflow-x: hidden;
+    margin-top: 1rem;
+}
+.sidenav > * + * {
+    margin-top: 0.75rem;
+}
+
+.sidenav a,
+.sidenav button {
+    display: block;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-size: 20px;
+    background-color: var(--akzentfarbe1);
+    color: white;
+    border: none;
+    text-align: left;
+    text-decoration: none;
+    font-family: var(--hausschrift);
+}
+
+.sidenav a:hover,
+.sidenav button:hover {
+    color: var(--akzentfarbe2);
+    cursor: pointer;
+}
+
+.sidenav button:focus {
+    outline: none;
+}
+
+.sidenav h5 {
+    color: var(--akzentfarbe2);
+}
+
+/* Sidenav styling */
+/* Headline in side panel */
+.sidenav h5 {
+    font-size: 20px;
+    color: var(--akzentfarbe2);
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.standard-font{
+    font-size: 20px;
+}
+
+
+h7 {
+        display: none;
+    }
+
+.header-image {
+    width: 100%;
+    margin: -2em 0 2em;
+}
+
+.about-profile-pic {
+    float: left;
+    margin: 0 1em 1em 0;
+}
+
+/* === Canvas Elements === */
+#moveEdge {
+    stroke: #20202060;
+    stroke-width: 4px;
+}
+
+path {
+    stroke: #202020;
+    stroke-width: 4px;
+    fill: none;
+}
+
+.pathSelected {
+    stroke: lightblue;
+}
+
+circle {
+    stroke: black;
+    fill: lightgreen;
+}
+
+.circleSelected {
+    fill: lightblue;
+}
+
+.qCircle {
+    fill: yellow;
+}
+
+.eCircle {
+    stroke: var(--akzentfarbe4);
+    stroke-width: 2px;
+    fill: none;
+}
+
+.eSeg {
+    stroke: var(--akzentfarbe4);
+    stroke-width: 5px;
+    stroke-linecap: round;
+}
+
+.qEdge {
+    stroke: yellow;
+    stroke-width: 1px;
+}
+
+#selectionRect {
+    fill: #add8e6;
+    stroke: #add8e6;
+    fill-opacity: 0.3;
+    stroke-opacity: 0.7;
+    stroke-width: 1px;
+    stroke-dasharray: 5, 5;
+}
+
+.warned {
+    fill: var(--akzentfarbe4);
+}
+
+.mouse {
+    cursor: pointer;
+}
+
+text {
+    fill: var(--akzentfarbe2);
+    font-size: 8px;
+    z-index: 99;
+}
+
+.glyphicon-trash {
+    background-color: transparent;
+}
+
+h5 {
+    font-size: 20px;
+    color: white;
+}
+
+hr {
+    border-top: 1px solid var(--akzentfarbe2);
+}
+
+#raster line {
+    stroke: #a39b86;
+    stroke-width: 1px;
+}
+
+.activeMode {
+    color: var(--akzentfarbe2) !important;
+    font-weight: bold;
+}
+
+#text {
+    font-family: var(--hausschrift);
+}
+
+/* === Tooltip === */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    font-family: var(--hausschrift);
+    z-index: 0;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    width: 120px;
+    background-color: var(--akzentfarbe2);
+    color: white;
+    font-size: 10pt;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.disable-mode {
+    color: var(--akzentfarbe3) !important;
+}
+
+.disable-mode:hover {
+    cursor: not-allowed !important;
+}
+
+/* === Popup Analyze === */
+.mm-popup__btn {
+    background: var(--akzentfarbe2);
+    border-color: var(--akzentfarbe2);
+    color: white;
+    font-family: var(--hausschrift);
+    font-size: 11pt;
+}
+
+.mm-popup__box__body {
+    font-size: 16pt;
+    color: var(--akzentfarbe2);
+}
+
+/* === Toggle Switch === */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--hintergrundfarbe);
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--akzentfarbe2);
+}
+
+input:checked + .slider::before {
+    transform: translateX(26px);
+}
+
+/* === Lists & Comments === */
+.list-group-item,
+.comment {
+    background-color: var(--akzentfarbe1);
+    border: none;
+    color: white;
+    font-size: 1rem;
+}
+
+.list-group-item {
+    font-size: 20px;
+}
+
+.comment {
+    font-size: 14px;
+}
+
+.form-control {
+    padding: 3px;
+}
+
+.selector {
+    width: 20%;
+    padding: 0;
+}
+/* Upload Button and Preview Container */
+.upload-button-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.upload-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+.preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Upload Drop Zone */
+.upload-drop-zone {
+    border: 2px dashed var(--akzentfarbe1);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    background-color: rgba(240, 137, 46, 0.05);
+    transition: all 0.3s ease;
+}
+
+.upload-drop-zone.drag-active {
+  border-color: var(--akzentfarbe2);
+  background-color: rgba(240, 137, 46, 0.1);
+}
+
+.upload-drop-zone:hover {
+    border-color: var(--akzentfarbe2);
+    background-color: rgba(240, 137, 46, 0.1);
+}
+
+.upload-drop-zone img {
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styling */
+.modal {
+    z-index: 1070 !important;
+}
+
+.modal-backdrop {
+    z-index: 1060 !important;
+}
+
+.modal.fade.show {
+    z-index: 1070 !important;
+}
+
+.modal-header {
+    background-color: var(--akzentfarbe1);
+    color: white;
+}
+
+.modal-header .modal-title {
+    font-family: var(--hausschrift);
+    font-weight: 600;
+}
+
+.modal-body {
+    background-color: var(--hintergrundfarbe);
+    color: var(--akzentfarbe2);
+}
+
+.modal-footer {
+    background-color: var(--hintergrundfarbe);
+    color: var(--akzentfarbe2);
+}
+
+/* Radio Button Styling */
+.form-check-input {
+    accent-color: var(--akzentfarbe1);
+}
+
+.form-check-label {
+    color: var(--akzentfarbe2);
+    cursor: pointer;
+}
+
+.form-label {
+    color: var(--akzentfarbe2);
+}
+
+/* Upload Modal Animations */
+.modal.fade .modal-dialog {
+    transform: scale(0.7);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal.fade.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+
+/* Floating drawer trigger button */
+.sidebar-drawer-trigger-draw-utils {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1050; /* above canvas, below modals */
+}
+
+.sidebar-drawer-trigger-control-utils {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1050; /* above canvas, below modals */
+}
+
+/* Optional: make it look like a handle */
+.sidebar-drawer-trigger-draw-utils .btn {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.sidebar-drawer-trigger-control-utils .btn {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.control-drawer .offcanvas-body,
+.control-drawer .offcanvas-header {
+    background-color: var(--akzentfarbe1);
+}
+
+.control-drawer .offcanvas-header {
+    color: var(--akzentfarbe2);
+}
+
+.control-drawer .drawer-item {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background: none;
+    border: none;
+    color: white;
+    text-align: left;
+    font-size: 1.1rem;
+    font-family: var(--hausschrift);
+}
+
+.control-drawer .drawer-item:hover {
+    color: var(--akzentfarbe2);
+    cursor: pointer;
+}
